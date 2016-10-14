@@ -1,5 +1,6 @@
 var microphone;
 var microphone_low = 0.07;
+var microphone_bar;
 var eye_x;
 var eye_y;
 var eye_width;
@@ -51,7 +52,8 @@ var one_eye = function(p) {
 			      width_between,
 			      eye_x, eye_y,
 			      upper_lid=upper_lid);
-	
+
+	microphone_bar = document.getElementById('microphone-level');
 	microphone = new p5.AudioIn();
 	// start the Audio Input.
 	// By default, it does not .connect() (to the computer speakers)
@@ -59,6 +61,7 @@ var one_eye = function(p) {
     };
     p.draw = function() {
 	vol = microphone.getLevel();
+	microphone_bar.style.width = vol*100 + "%";
 	//
 	if (vol < microphone_low) {
 	    vol = 0;

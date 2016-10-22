@@ -1,5 +1,6 @@
 var microphone;
 var microphone_low = 0.07;
+var microphone_high = 0.7;
 var microphone_bar;
 var eye_x;
 var eye_y;
@@ -13,13 +14,14 @@ var target_upper_lid;
 var delay_to_sleep;
 var gaze_locked = false;
 var eyepair;
+var canvas_div;
+var canvas;
 
 var one_eye = function(p) {
     var width;
     var height;
     var iris_width;
     var width_between;
-
 
     var vol;
     var high_vol;
@@ -29,11 +31,31 @@ var one_eye = function(p) {
 	p.background(0,0,0);
     }
 
-    p.setup = function() {
-	var canvas_div = document.getElementById('sketch-holder');
-        width = canvas_div.offsetWidth;
+    var want_fullscreen = false;
+    var b_fullscreen = document.getElementById('b_fullscreen');
+    if (b_fullscreen) {
+	b_fullscreen.onclick = function() {
+            want_fullscreen = !want_fullscreen;
+	    if (want_fullscreen) {
+		canvas_div.webkitRequestFullScreen();
+		width = screen.width+1;
+		update_locations(width);
+		canvas.size(width, height);
+		draw_base(p);
+		eyepair = new EyePair(eye_width, 
+				      eye_height,
+				      iris_width, //iris_radius,
+				      width_between,
+				      eye_x, eye_y,
+				      upper_lid=upper_lid);
+	    } else {
+		document.webkitExitFullScreen(); 
+	    }
+	}
+    };
+
+    var update_locations = function(width) {
 	height = Math.round(width / 3);
-	
 	eye_width = Math.round(width / 7);
 	eye_height = Math.round(eye_width / 2.5);
 	iris_width = Math.round(eye_width / 2.5);
@@ -41,8 +63,15 @@ var one_eye = function(p) {
 	eye_x = Math.round(width/2);
 	eye_y = Math.round(height/2);
 	upper_lid_lowest = Math.round(eye_height * 0.9);
+    }
+    
 
-        var canvas = p.createCanvas(width, height);
+    p.setup = function() {
+	canvas_div = document.getElementById('sketch-holder');
+        width = canvas_div.offsetWidth;
+	update_locations(width);
+
+        canvas = p.createCanvas(width, height);
         canvas.parent('sketch-holder');
 	draw_base(p);
 
@@ -65,8 +94,8 @@ var one_eye = function(p) {
 	//
 	if (vol < microphone_low) {
 	    vol = 0;
-	} else if (vol < 0.7) {
-	    vol = (1 / (0.7-microphone_low)) * vol - microphone_low * (1 / (0.7-microphone_low));
+	} else if (vol < microphone_high) {
+	    vol = (1 / (microphone_high-microphone_low)) * vol - microphone_low * (1 / (microphone_high-microphone_low));
 	} else {
 	    vol = 1;
 	}

@@ -48,6 +48,7 @@ var one_eye = function(p) {
 				      width_between,
 				      eye_x, eye_y,
 				      upper_lid=upper_lid);
+		p.noCursor();
 	    } else {
 		document.webkitExitFullScreen(); 
 	    }

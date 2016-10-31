@@ -56,10 +56,9 @@ var one_eye = function(p) {
 
     var update_locations = function(width) {
 	height = Math.round(width / 3);
-	eye_width = Math.round(width / 7);
-	eye_height = Math.round(eye_width / 2.5);
-	iris_width = Math.round(eye_width / 2.5);
-	width_between = Math.round(eye_width * 1.3);
+	eye_width = Math.round(width / 3.5);
+	eye_height = Math.round(eye_width / 1.25);
+	iris_width = Math.round(eye_width / 1.25);
 	eye_x = Math.round(width/2);
 	eye_y = Math.round(height/2);
 	upper_lid_lowest = Math.round(eye_height * 0.9);
